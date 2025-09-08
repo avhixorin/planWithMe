@@ -20,20 +20,13 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
 };
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-  selectedDate: Date;
-  setSelectedDate: (date: Date | undefined) => void;
-};
-export function AppSidebar({
-  selectedDate,
-  setSelectedDate,
-  ...props
-}: AppSidebarProps) {
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="py-1">
         <div className="flex justify-around items-center gap-2 rounded-md p-2 w-full">
-          <div className=" flex aspect-square size-8 items-center justify-center rounded-lg">
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
             <Calendar className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
@@ -45,10 +38,7 @@ export function AppSidebar({
         <NavMain items={dashboardData.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <DatePicker
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
+        <DatePicker />
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

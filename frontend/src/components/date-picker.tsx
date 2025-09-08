@@ -1,13 +1,18 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Calendar } from "./ui/calendar";
 import { SidebarGroup, SidebarGroupContent } from "./ui/sidebar";
+import type { RootState } from "../redux/store";
+import { setSelectedDate } from "../redux/slices/componentSlice";
 
-export function DatePicker({
-  selectedDate,
-  setSelectedDate,
-}: {
-  selectedDate: Date;
-  setSelectedDate: (date: Date | undefined) => void;
-}) {
+export function DatePicker() {
+  const selectedDate = useSelector(
+    (state: RootState) => state.componentSlice.selectedDate
+  );
+  const dispatch = useDispatch();
+  const handleDateChange = (date: Date | undefined) => {
+    if (!date) return;
+    dispatch(setSelectedDate(date));
+  };
   return (
     <SidebarGroup className="px-0">
       <SidebarGroupContent>
@@ -20,7 +25,7 @@ export function DatePicker({
           selected={selectedDate}
           onSelect={(date: Date | undefined) => {
             if (date) {
-              setSelectedDate(date);
+              handleDateChange(date);
             }
           }}
           startMonth={

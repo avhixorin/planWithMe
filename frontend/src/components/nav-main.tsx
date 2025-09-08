@@ -1,71 +1,59 @@
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-  } from "./ui/collapsible";
-  import {
-    SidebarGroup,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarMenuSub,
-    SidebarMenuSubButton,
-    SidebarMenuSubItem,
-  } from "./ui/sidebar";
-  import { ChevronRight, FileText, type LucideIcon } from "lucide-react";
-  import { NavLink, useLocation } from "react-router-dom";
-  
-  export function NavMain({
-    items,
-  }: {
-    items: {
-      title: string;
-      url: string;
-      icon?: LucideIcon;
-    }[];
-  }) {
-    const { pathname } = useLocation();
-    const docsPaths = ["/docs", "/examples"];
-    const isDocsGroupActive = docsPaths.includes(pathname);
-  
-    return (
-      <SidebarGroup>
-        <SidebarMenu className="flex flex-col gap-2 pt-4">
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <NavLink
-                to={item.url}
-                className={({ isActive }) =>
-                  `w-full ${
-                    isActive
-                      ? "bg-muted text-primary font-semibold shadow-inner rounded-lg"
-                      : ""
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <SidebarMenuButton
-                    tooltip={item.title}
-                    className="flex items-center gap-3 px-2 py-3 cursor-pointer"
-                  >
-                    {item.icon && (
-                      <item.icon
-                        className={`min-w-[1.20rem] min-h-[1.20rem] ${
-                          isActive ? "text-primary" : "text-muted-foreground"
-                        }`}
-                        strokeWidth={1.8}
-                      />
-                    )}
-                    <span className="text-sm tracking-wide font-sans">
-                      {item.title}
-                    </span>
-                  </SidebarMenuButton>
-                )}
-              </NavLink>
-            </SidebarMenuItem>
-          ))}
-  
-          <Collapsible
+  SidebarGroup,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./ui/sidebar";
+import { type LucideIcon } from "lucide-react";
+import { NavLink } from "react-router-dom";
+
+export function NavMain({
+  items,
+}: {
+  items: {
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+  }[];
+}) {
+  return (
+    <SidebarGroup>
+      <SidebarMenu className="flex flex-col gap-2 pt-4">
+        {items.map((item) => (
+          <SidebarMenuItem key={item.title}>
+            <NavLink
+              to={item.url}
+              className={({ isActive }) =>
+                `w-full ${
+                  isActive
+                    ? "bg-muted text-primary font-semibold shadow-inner rounded-lg"
+                    : ""
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  className="flex items-center gap-3 px-2 py-3 cursor-pointer"
+                >
+                  {item.icon && (
+                    <item.icon
+                      className={`min-w-[1.20rem] min-h-[1.20rem] ${
+                        isActive ? "text-primary" : "text-muted-foreground"
+                      }`}
+                      strokeWidth={1.8}
+                    />
+                  )}
+                  <span className="text-sm tracking-wide font-sans">
+                    {item.title}
+                  </span>
+                </SidebarMenuButton>
+              )}
+            </NavLink>
+          </SidebarMenuItem>
+        ))}
+
+        {/* <Collapsible
             asChild
             defaultOpen={isDocsGroupActive}
             className="group/collapsible"
@@ -117,8 +105,8 @@ import {
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>
-          </Collapsible>
-        </SidebarMenu>
-      </SidebarGroup>
-    );
-  }
+          </Collapsible> */}
+      </SidebarMenu>
+    </SidebarGroup>
+  );
+}

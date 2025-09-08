@@ -1,8 +1,4 @@
-import {
-  Activity,
-  Calendar,
-  House,
-} from "lucide-react";
+import { Activity, Calendar, House } from "lucide-react";
 
 export const dashboardData = {
   navMain: [
@@ -13,13 +9,13 @@ export const dashboardData = {
       isActive: true,
     },
     {
-      title: "Add plans",
-      url: "/dashboard/api-keys",
+      title: "Group Plans",
+      url: "/dashboard/group-plans",
       icon: Calendar,
     },
     {
-      title: "Add Activities",
-      url: "/dashboard/models",
+      title: "Manage plans",
+      url: "/dashboard/manage-plans",
       icon: Activity,
     },
   ],
