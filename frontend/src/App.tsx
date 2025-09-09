@@ -7,7 +7,7 @@ import ManagePlans from "./pages/dashboard/manage-plans";
 const App = () => {
   return (
     <Routes>
-      <Route path="/dashboard" element={<Dashboard />}>
+      <Route path="/" element={<Dashboard />}>
         <Route index element={<DashboardHome />} />
         <Route path="group-plans" element={<GroupPlans />} />
         <Route path="manage-plans" element={<ManagePlans />} />

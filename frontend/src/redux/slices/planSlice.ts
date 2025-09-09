@@ -1,81 +1,113 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
+import { type Activity, type Plan } from "../../../types/planTypes";
 
-type Activity = {
-  id: string;
-  title: string;
-  category: string;
-  icon: "FaMugHot" | "FaTree" | "FaFilm" | "FaBookOpen";
-  mood?: string;
-  start?: string;
-  durationMinutes?: number;
-  description?: string;
-  tags?: string[];
+export type PlanState = {
+  plans: Plan[];
 };
 
-type ScheduleState = {
-  saturday: Activity[];
-  sunday: Activity[];
-  theme: "default" | "lazy" | "adventurous" | "family";
-  lastUpdated: string;
-};
-
-const initialState: ScheduleState = {
-  saturday: [],
-  sunday: [],
-  theme: "default",
-  lastUpdated: "",
+const initialState: PlanState = {
+  plans: [],
 };
 
 const planSlice = createSlice({
   name: "plan",
   initialState,
   reducers: {
+    /**
+     * Creates a new, empty plan for a given day if one doesn't already exist.
+     */
+    addPlan: (
+      state,
+      action: PayloadAction<{ day: "saturday" | "sunday"; date: string }>
+    ) => {
+      const { day, date } = action.payload;
+      const planExists = state.plans.some((plan) => plan.day === day);
+
+      if (!planExists) {
+        const newPlan: Plan = {
+          id: uuid(),
+          day,
+          date,
+          activities: [],
+          updatedAt: new Date().toISOString(),
+        };
+        state.plans.push(newPlan);
+      }
+    },
+
+    /**
+     * Adds a new activity to a specific day's plan.
+     * If a plan for that day doesn't exist, it creates one.
+     */
     addActivity: (
       state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; activity: Omit<Activity, "id"> }>
+      action: PayloadAction<{ day: "saturday" | "sunday"; activityData: Omit<Activity, "id" | "createdAt" | "updatedAt"> }>
     ) => {
-      const newActivity = { id: uuid(), ...action.payload.activity };
-      state[action.payload.day].push(newActivity);
-      state.lastUpdated = new Date().toISOString();
+      const { day, activityData } = action.payload;
+      let plan = state.plans.find((p) => p.day === day);
+      const now = new Date().toISOString();
+
+      if (!plan) {
+        plan = {
+          id: uuid(),
+          day: day,
+          activities: [],
+          date: new Date().toISOString().split('T')[0],
+          updatedAt: now,
+        };
+        state.plans.push(plan);
+      }
+      
+      const newActivity: Activity = {
+        id: uuid(),
+        ...activityData,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      plan.activities.push(newActivity);
+      plan.updatedAt = now;
     },
+
+    /**
+     * Removes an activity from a specific day's plan using its ID.
+     */
     removeActivity: (
       state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; id: string }>
+      action: PayloadAction<{ day: "saturday" | "sunday"; activityId: string }>
     ) => {
-      state[action.payload.day] = state[action.payload.day].filter(
-        (act) => act.id !== action.payload.id
-      );
-      state.lastUpdated = new Date().toISOString();
+      const { day, activityId } = action.payload;
+      const plan = state.plans.find((p) => p.day === day);
+
+      if (plan) {
+        plan.activities = plan.activities.filter((activity) => activity.id !== activityId);
+        plan.updatedAt = new Date().toISOString();
+      }
     },
+
+    /**
+     * Updates one or more properties of a specific activity.
+     */
     updateActivity: (
       state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; id: string; updates: Partial<Activity> }>
+      action: PayloadAction<{ day: "saturday" | "sunday"; activityId: string; updates: Partial<Omit<Activity, "id">> }>
     ) => {
-      const idx = state[action.payload.day].findIndex((a) => a.id === action.payload.id);
-      if (idx >= 0) {
-        state[action.payload.day][idx] = {
-          ...state[action.payload.day][idx],
-          ...action.payload.updates,
-        };
+      const { day, activityId, updates } = action.payload;
+      const plan = state.plans.find((p) => p.day === day);
+
+      if (plan) {
+        const activityToUpdate = plan.activities.find((activity) => activity.id === activityId);
+        
+        if (activityToUpdate) {
+          Object.assign(activityToUpdate, updates);
+          activityToUpdate.updatedAt = new Date().toISOString();
+          plan.updatedAt = new Date().toISOString();
+        }
       }
-      state.lastUpdated = new Date().toISOString();
-    },
-    reorderActivity: (
-      state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; from: number; to: number }>
-    ) => {
-      const arr = state[action.payload.day];
-      const [moved] = arr.splice(action.payload.from, 1);
-      arr.splice(action.payload.to, 0, moved);
-      state.lastUpdated = new Date().toISOString();
-    },
-    setTheme: (state, action: PayloadAction<ScheduleState["theme"]>) => {
-      state.theme = action.payload;
     },
   },
 });
 
-export const { addActivity, removeActivity, updateActivity, reorderActivity, setTheme } =
-  planSlice.actions;
+export const { addPlan, addActivity, removeActivity, updateActivity } = planSlice.actions;
 export default planSlice.reducer;

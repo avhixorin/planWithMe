@@ -13,6 +13,7 @@ const getNearestWeekend = (date: Date) => {
 
 const initialState = {
   selectedDate: getNearestWeekend(new Date()),
+  mood: "default",
 };
 
 export const componentSlice = createSlice({
@@ -22,8 +23,10 @@ export const componentSlice = createSlice({
     setSelectedDate: (state, action) => {
       state.selectedDate = action.payload;
     },
+    setMood: (state, action) => {
+      state.mood = action.payload;
+    },
   },
 });
 
-export const { setSelectedDate } = componentSlice.actions;
-
+export const { setSelectedDate, setMood } = componentSlice.actions;

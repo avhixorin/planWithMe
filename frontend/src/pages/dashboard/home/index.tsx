@@ -1,18 +1,42 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../redux/store";
-import { getWeekendDates } from "../../../../utils";
 import {
   ActivityCard,
   EmptyDayCard,
 } from "../../../components/dashboard-cards";
 import { AvailableActivities } from "../../../components/available-activities";
-
+import {
+  updateActivity,
+  removeActivity,
+} from "../../../redux/slices/planSlice";
+import type { Activity } from "../../../../types/planTypes";
+import { getWeekendDates } from "../../../../utils/general";
 const DashboardHome = () => {
-  const plans = useSelector((state: RootState) => state.plan);
+  const dispatch = useDispatch();
+  const plans = useSelector((state: RootState) => state.plan.plans);
   const selectedDate = useSelector(
     (state: RootState) => state.componentSlice.selectedDate
   );
+
+  const saturdayPlan = plans.find((plan) => plan.day === "saturday");
+  const sundayPlan = plans.find((plan) => plan.day === "sunday");
+
   const weekend = getWeekendDates(selectedDate);
+
+  const handleUpdateActivity = (
+    day: "saturday" | "sunday",
+    updates: Partial<Activity>
+  ) => {
+    if (!updates.id) return;
+    dispatch(updateActivity({ day, activityId: updates.id, updates }));
+  };
+
+  const handleDeleteActivity = (
+    day: "saturday" | "sunday",
+    activityId: string
+  ) => {
+    dispatch(removeActivity({ day, activityId }));
+  };
 
   return (
     <div className="grid w-full h-full grid-cols-1 gap-8 lg:grid-cols-[1fr_350px] p-6 sm:p-8 bg-slate-50 dark:bg-slate-900">
@@ -32,22 +56,38 @@ const DashboardHome = () => {
         </header>
 
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-2">
+          {/* Saturday Column */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-sky-500">Saturday</h2>
-            {plans.saturday.length > 0 ? (
-              plans.saturday.map((activity) => (
-                <ActivityCard key={activity.id} {...activity} />
+            {saturdayPlan && saturdayPlan.activities.length > 0 ? (
+              saturdayPlan.activities.map((activity) => (
+                <ActivityCard
+                  key={activity.id}
+                  activity={activity}
+                  onUpdate={(updates) =>
+                    handleUpdateActivity("saturday", updates)
+                  }
+                  onDelete={(id) => handleDeleteActivity("saturday", id)}
+                />
               ))
             ) : (
               <EmptyDayCard day="Saturday" />
             )}
           </div>
 
+          {/* Sunday Column */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-sky-500">Sunday</h2>
-            {plans.sunday.length > 0 ? (
-              plans.sunday.map((activity) => (
-                <ActivityCard key={activity.id} {...activity} />
+            {sundayPlan && sundayPlan.activities.length > 0 ? (
+              sundayPlan.activities.map((activity) => (
+                <ActivityCard
+                  key={activity.id}
+                  activity={activity}
+                  onUpdate={(updates) =>
+                    handleUpdateActivity("sunday", updates)
+                  }
+                  onDelete={(id) => handleDeleteActivity("sunday", id)}
+                />
               ))
             ) : (
               <EmptyDayCard day="Sunday" />
