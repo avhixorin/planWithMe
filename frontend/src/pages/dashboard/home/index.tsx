@@ -40,7 +40,7 @@ const DashboardHome = () => {
 
   return (
     <div className="grid w-full h-full grid-cols-1 gap-8 lg:grid-cols-[1fr_350px] p-6 sm:p-8 bg-slate-50 dark:bg-slate-900">
-      <main className="flex flex-col">
+      <main className="flex flex-col min-h-0">
         <header className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -56,7 +56,6 @@ const DashboardHome = () => {
         </header>
 
         <div className="grid flex-1 grid-cols-1 gap-8 md:grid-cols-2">
-          {/* Saturday Column */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-sky-500">Saturday</h2>
             {saturdayPlan && saturdayPlan.activities.length > 0 ? (
@@ -75,7 +74,6 @@ const DashboardHome = () => {
             )}
           </div>
 
-          {/* Sunday Column */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-sky-500">Sunday</h2>
             {sundayPlan && sundayPlan.activities.length > 0 ? (
