@@ -255,7 +255,7 @@ export function WeekendSchedule({
                           size="sm"
                           variant="ghost"
                           onClick={() => onActivityRemove(activity.id)}
-                          className="ml-2 h-7 w-7 p-0 text-muted-foreground hover:text-destructive transition-all duration-200 hover:scale-110"
+                          className="ml-2 h-7 w-7 p-0 text-muted-foreground hover:text-destructive transition-all duration-200 hover:scale-110 cursor-pointer"
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
