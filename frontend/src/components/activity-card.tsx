@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addActivityToPlan, addPlan } from "../redux/plansSlice";
 import { Card, CardContent } from "./ui/card";
-import { Plus, Sparkles, CheckCircle2, CalendarDays } from "lucide-react";
+import { Plus, Sparkles, CalendarDays } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import {
@@ -33,8 +33,6 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
   const dispatch = useDispatch();
   const plans = useSelector((state: RootState) => state.weekendPlans.plans);
   const weekends = useMemo(() => getNextSixWeekends(), []);
-
-  const [recentlyAdded, setRecentlyAdded] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [selectedWeekend, setSelectedWeekend] = useState("");
@@ -86,17 +84,11 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
       };
       dispatch(addPlan(newPlan));
     }
-
-    setRecentlyAdded(true);
     setIsDialogOpen(false);
     setSelectedWeekend("");
     setSelectedDay("");
     setSelectedTimeSlot("");
     toast.success(`"${activity.name}" added to your plan!`);
-
-    setTimeout(() => {
-      setRecentlyAdded(false);
-    }, 2000);
   };
 
   const handleOpenDialog = () => {
@@ -152,29 +144,15 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
                 )}
               </div>
             </div>
+            <Button
+              size="sm"
+              onClick={handleOpenDialog}
+              className={`ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 cursor-pointer ${theme.bg} ${theme.text} border hover:border-gray-400`}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
           </div>
         </CardContent>
-
-        <div
-          className={`absolute inset-0 flex items-center justify-center bg-black/70 transition-opacity duration-300 
-            ${
-              recentlyAdded
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100"
-            }`}
-        >
-          {recentlyAdded ? (
-            <div className="flex flex-col items-center text-white animate-fade-in">
-              <CheckCircle2 className="h-16 w-16 text-green-400" />
-              <p className="mt-2 font-semibold">Added to Plan!</p>
-            </div>
-          ) : (
-            <Button size="lg" onClick={handleOpenDialog}>
-              <Plus className="h-5 w-5 mr-2" />
-              Add to Plan
-            </Button>
-          )}
-        </div>
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -182,7 +160,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
           className="
       sm:max-w-[480px] 
       bg-white/90 dark:bg-neutral-900/90 
-      backdrop-blur-md 
+      backdrop-blur-md text-foreground
       border border-gray-200 dark:border-neutral-700 
       shadow-xl dark:shadow-lg
     "

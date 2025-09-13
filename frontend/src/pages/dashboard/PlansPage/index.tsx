@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formatWeekend, getNextSixWeekends } from "../../../../utils/general";
 import type { Activity, ScheduledActivity } from "../../../../types/planTypes";
 import type { RootState } from "../../../redux/store";
@@ -15,6 +15,9 @@ import { EmptyDayCard } from "../../../components/empty-day-card";
 import { Button } from "../../../components/ui/button";
 import { ExportDialog } from "../../../components/export-dialogue";
 import { Share2 } from "lucide-react";
+import { removeActivityFromPlan } from "../../../redux/plansSlice";
+import { toast } from "sonner";
+import { ConfirmDialog } from "../../../components/confirm-dialog";
 
 const Plans = () => {
   const weekends = useMemo(() => getNextSixWeekends(), []);
@@ -24,7 +27,8 @@ const Plans = () => {
   const [selectedActivities, setSelectedActivities] = useState<
     ScheduledActivity[]
   >([]);
-
+  const [activityToDelete, setActivityToDelete] = useState<string | null>(null);
+  const dispatch = useDispatch();
   const allPlans = useSelector((state: RootState) => state.weekendPlans.plans);
 
   const selectedPlan = useMemo(() => {
@@ -66,10 +70,32 @@ const Plans = () => {
     setSelectedActivities((prev) => [...prev, scheduledActivity]);
   };
 
-  const handleActivityRemove = (activityId: string) => {
-    setSelectedActivities((prev) =>
-      prev.filter((activity) => activity.id !== activityId)
-    );
+  const handleRequestRemove = (activityId: string) => {
+    setActivityToDelete(activityId);
+  };
+
+  const handleConfirmRemove = () => {
+    if (!activityToDelete) return;
+
+    const promise = new Promise<void>((resolve, reject) => {
+      if (!selectedPlan) {
+        return reject(new Error("No active plan selected."));
+      }
+      dispatch(
+        removeActivityFromPlan({
+          planId: selectedPlan.id,
+          activityId: activityToDelete,
+        })
+      );
+      resolve();
+    });
+
+    toast.promise(promise, {
+      loading: "Removing activity...",
+      success: "Activity removed from your plan! 🎉",
+      error: (err) => err.message || "Failed to remove activity.",
+    });
+    setActivityToDelete(null);
   };
 
   const handleActivityUpdate = (updatedActivity: ScheduledActivity) => {
@@ -90,6 +116,13 @@ const Plans = () => {
 
   return (
     <div className="w-full p-4">
+      <ConfirmDialog
+        isOpen={!!activityToDelete}
+        onClose={() => setActivityToDelete(null)}
+        onConfirm={handleConfirmRemove}
+        title="Remove Activity"
+        description="Are you sure you want to remove this activity from your plan? This action cannot be undone."
+      />
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
         <h2 className="text-xl font-semibold text-foreground">
           Your Weekend Plan
@@ -132,14 +165,14 @@ const Plans = () => {
             <WeekendSchedule
               day="saturday"
               activities={saturdayActivities}
-              onActivityRemove={handleActivityRemove}
+              onActivityRemove={handleRequestRemove}
               onActivityUpdate={handleActivityUpdate}
               onActivityAdd={handleActivityAdd}
             />
             <WeekendSchedule
               day="sunday"
               activities={sundayActivities}
-              onActivityRemove={handleActivityRemove}
+              onActivityRemove={handleRequestRemove}
               onActivityUpdate={handleActivityUpdate}
               onActivityAdd={handleActivityAdd}
             />

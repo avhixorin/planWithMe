@@ -19,6 +19,16 @@ const plansSlice = createSlice({
     removePlan: (state, action: PayloadAction<string>) => {
       state.plans = state.plans.filter((plan) => plan.id !== action.payload);
     },
+    removeActivityFromPlan: (
+      state,
+      action: PayloadAction<{ planId: string; activityId: string }>
+    ) => {
+      const { planId, activityId } = action.payload;
+      const plan = state.plans.find((p) => p.id === planId);
+      if (plan) {
+        plan.activities = plan.activities.filter((a) => a.id !== activityId);
+      }
+    },
     updatePlan: (state, action: PayloadAction<Plan>) => {
       const index = state.plans.findIndex(
         (plan) => plan.id === action.payload.id
@@ -42,7 +52,7 @@ const plansSlice = createSlice({
       action: PayloadAction<{
         planId: string;
         activityId: string;
-        updates: Partial<ScheduledActivity>; 
+        updates: Partial<ScheduledActivity>;
       }>
     ) => {
       const { planId, activityId, updates } = action.payload;
@@ -64,6 +74,7 @@ export const {
   updatePlan,
   addActivityToPlan,
   updateActivityInPlan,
+  removeActivityFromPlan
 } = plansSlice.actions;
 
 export default plansSlice.reducer;
