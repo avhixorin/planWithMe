@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { Activity, Plan } from "../../types/planTypes";
+import type { Plan, ScheduledActivity } from "../../types/planTypes";
 
 export interface PlansState {
   plans: Plan[];
@@ -13,21 +13,12 @@ const plansSlice = createSlice({
   name: "plans",
   initialState,
   reducers: {
-    /**
-     * Adds a new plan to the state.
-     */
     addPlan: (state, action: PayloadAction<Plan>) => {
       state.plans.push(action.payload);
     },
-    /**
-     * Removes a plan from the state by its ID.
-     */
     removePlan: (state, action: PayloadAction<string>) => {
       state.plans = state.plans.filter((plan) => plan.id !== action.payload);
     },
-    /**
-     * Updates an existing plan.
-     */
     updatePlan: (state, action: PayloadAction<Plan>) => {
       const index = state.plans.findIndex(
         (plan) => plan.id === action.payload.id
@@ -36,24 +27,43 @@ const plansSlice = createSlice({
         state.plans[index] = action.payload;
       }
     },
-    /**
-     * Adds an activity to an existing plan, identified by the plan's ID.
-     */
     addActivityToPlan: (
       state,
-      action: PayloadAction<{ id: string; activity: Activity }>
+      action: PayloadAction<{ id: string; activity: ScheduledActivity }>
     ) => {
       const { id, activity } = action.payload;
       const plan = state.plans.find((p) => p.id === id);
-      // Ensure the plan exists and the activity is not already in it.
-      if (plan && !plan.activities.some(a => a.id === activity.id)) {
+      if (plan && !plan.activities.some((a) => a.id === activity.id)) {
         plan.activities.push(activity);
+      }
+    },
+    updateActivityInPlan: (
+      state,
+      action: PayloadAction<{
+        planId: string;
+        activityId: string;
+        updates: Partial<ScheduledActivity>; 
+      }>
+    ) => {
+      const { planId, activityId, updates } = action.payload;
+      const plan = state.plans.find((p) => p.id === planId);
+
+      if (plan) {
+        const activity = plan.activities.find((act) => act.id === activityId);
+        if (activity) {
+          Object.assign(activity, updates);
+        }
       }
     },
   },
 });
 
-export const { addPlan, removePlan, updatePlan, addActivityToPlan } =
-  plansSlice.actions;
+export const {
+  addPlan,
+  removePlan,
+  updatePlan,
+  addActivityToPlan,
+  updateActivityInPlan,
+} = plansSlice.actions;
 
 export default plansSlice.reducer;
