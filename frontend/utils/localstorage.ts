@@ -1,10 +1,9 @@
 import type { PlansState } from "../src/redux/plansSlice";
-import type { MoodState } from "../src/redux/moodSlice";
 
 const STATE_KEY = "weekendPlanner";
 
 export const loadState = ():
-  | { weekendPlans: PlansState; mood: MoodState }
+  | { weekendPlans: PlansState }
   | undefined => {
   try {
     const serializedState = localStorage.getItem(STATE_KEY);
@@ -18,7 +17,7 @@ export const loadState = ():
   }
 };
 
-export const saveState = (state: { weekendPlans: PlansState, mood: MoodState }) => {
+export const saveState = (state: { weekendPlans: PlansState }) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem(STATE_KEY, serializedState);
