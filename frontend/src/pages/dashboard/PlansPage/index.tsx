@@ -1,17 +1,20 @@
-import { WeekendSchedule } from "../../components/weekend-schedule";
 import { useEffect, useMemo, useState } from "react";
-import type { Activity, ScheduledActivity } from "../../../types/planTypes";
+import { useSelector } from "react-redux";
+import { formatWeekend, getNextSixWeekends } from "../../../../utils/general";
+import type { Activity, ScheduledActivity } from "../../../../types/planTypes";
+import type { RootState } from "../../../redux/store";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { formatWeekend, getNextSixWeekends } from "../../../utils/general";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../redux/store";
-import { EmptyDayCard } from "../../components/empty-day-card";
+} from "../../../components/ui/select";
+import { WeekendSchedule } from "../../../components/weekend-schedule";
+import { EmptyDayCard } from "../../../components/empty-day-card";
+import { Button } from "../../../components/ui/button";
+import { ExportDialog } from "../../../components/export-dialogue";
+import { Share2 } from "lucide-react";
 
 const Plans = () => {
   const weekends = useMemo(() => getNextSixWeekends(), []);
@@ -91,22 +94,36 @@ const Plans = () => {
         <h2 className="text-xl font-semibold text-foreground">
           Your Weekend Plan
         </h2>
-        <Select onValueChange={setSelectedWeekend} value={selectedWeekend}>
-          <SelectTrigger className="text-foreground">
-            <SelectValue placeholder="Choose a weekend..." />
-          </SelectTrigger>
-          <SelectContent>
-            {weekends.map((weekend) => (
-              <SelectItem
-                key={weekend.startDate}
-                value={weekend.startDate}
-                className="dark:focus:bg-zinc-700"
+        <div className="flex items-center gap-2">
+          {selectedActivities.length > 0 && (
+            <ExportDialog activities={selectedActivities}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2 bg-transparent text-foreground"
               >
-                {formatWeekend(weekend.startDate, weekend.endDate)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+                <Share2 className="h-4 w-4" />
+                Export
+              </Button>
+            </ExportDialog>
+          )}
+          <Select onValueChange={setSelectedWeekend} value={selectedWeekend}>
+            <SelectTrigger className="text-foreground">
+              <SelectValue placeholder="Choose a weekend..." />
+            </SelectTrigger>
+            <SelectContent>
+              {weekends.map((weekend) => (
+                <SelectItem
+                  key={weekend.startDate}
+                  value={weekend.startDate}
+                  className="dark:focus:bg-zinc-700"
+                >
+                  {formatWeekend(weekend.startDate, weekend.endDate)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <main key={selectedWeekend} className="animate-fade-in-slow mt-4">

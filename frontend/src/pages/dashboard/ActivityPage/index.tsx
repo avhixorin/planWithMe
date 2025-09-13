@@ -1,4 +1,4 @@
-import { ActivityBrowser } from "../../components/activity-browser";
+import { ActivityBrowser } from "../../../components/activity-browser";
 
 const ActivityPage = () => {
   return (

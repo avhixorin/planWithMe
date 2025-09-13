@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/dashboard/index";
 import ActivityPage from "./pages/dashboard/ActivityPage";
-import Plans from "./pages/dashboard/Plans";
+import Plans from "./pages/dashboard/PlansPage";
 
 const App = () => {
   return (
