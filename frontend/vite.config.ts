@@ -9,7 +9,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      // <-- Add the plugin configuration
       registerType: "autoUpdate",
       injectRegister: "auto",
       workbox: {
@@ -23,12 +22,12 @@ export default defineConfig({
         background_color: "#f8fafc",
         icons: [
           {
-            src: "pngimg.com - chatgpt_PNG16.png",
+            src: "weekendly.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "pngimg.com - chatgpt_PNG16.png",
+            src: "weekendly.png",
             sizes: "512x512",
             type: "image/png",
           },
