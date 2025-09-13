@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 const getNearestWeekend = (date: Date) => {
   const day = date.getDay();
@@ -11,19 +11,26 @@ const getNearestWeekend = (date: Date) => {
   return nearestSaturday;
 };
 
-const initialState = {
-  selectedDate: getNearestWeekend(new Date()),
-  mood: "default",
+type Mood = "Chill" | "Adventurous" | "Productive" | "Cozy";
+
+type ComponentState = {
+  selectedDate: string;
+  mood: Mood;
+};
+
+const initialState: ComponentState = {
+  selectedDate: getNearestWeekend(new Date()).toISOString().split("T")[0],
+  mood: "Chill",
 };
 
 export const componentSlice = createSlice({
   name: "component",
   initialState,
   reducers: {
-    setSelectedDate: (state, action) => {
+    setSelectedDate: (state, action: PayloadAction<string>) => {
       state.selectedDate = action.payload;
     },
-    setMood: (state, action) => {
+    setMood: (state, action: PayloadAction<Mood>) => {
       state.mood = action.payload;
     },
   },

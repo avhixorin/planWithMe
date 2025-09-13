@@ -1,3 +1,4 @@
+import { addDays, format, startOfWeek } from "date-fns";
 import {
   BookOpen,
   Coffee,
@@ -7,45 +8,38 @@ import {
   type LucideProps,
 } from "lucide-react";
 import React from "react";
+import { v4 as uuid } from "uuid";
 
-export const getWeekendDates = (date: Date) => {
-  const dayOfWeek = date.getDay();
-  const current = new Date(date);
+const getWeekendDates = (dateString: string) => {
+  // FIX: Create a new Date object from the incoming string
+  const date = new Date(dateString);
 
-  let saturday: Date;
-  let sunday: Date;
-
-  if (dayOfWeek === 6) {
-    saturday = current;
-    sunday = new Date(current);
-    sunday.setDate(current.getDate() + 1);
-  } else if (dayOfWeek === 0) {
-    sunday = current;
-    saturday = new Date(current);
-    saturday.setDate(current.getDate() - 1);
-  } else {
-    saturday = new Date(current);
-    saturday.setDate(current.getDate() + (6 - dayOfWeek));
-    sunday = new Date(saturday);
-    sunday.setDate(saturday.getDate() + 1);
+  // Ensure the date is valid before proceeding
+  if (isNaN(date.getTime())) {
+    console.error(
+      "Invalid date string provided to getWeekendDates:",
+      dateString
+    );
+    const today = new Date();
+    return {
+      saturday: format(startOfWeek(today, { weekStartsOn: 6 }), "MMMM d"),
+      sunday: format(
+        addDays(startOfWeek(today, { weekStartsOn: 6 }), 1),
+        "MMMM d"
+      ),
+    };
   }
 
-  const formatDate = (d: Date) =>
-    new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      day: "numeric",
-    }).format(d);
+  const saturday = startOfWeek(date, { weekStartsOn: 6 });
+  const sunday = addDays(saturday, 1);
 
   return {
-    saturday: formatDate(saturday),
-    sunday: formatDate(sunday),
+    saturday: format(saturday, "MMMM d"),
+    sunday: format(sunday, "MMMM d"),
   };
 };
 
-export const getIcon = (
-  iconName: string,
-  props?: LucideProps
-): React.ReactElement => {
+const getIcon = (iconName: string, props?: LucideProps): React.ReactElement => {
   switch (iconName) {
     case "FaMugHot":
       return <Coffee {...props} />;
@@ -88,3 +82,38 @@ export const getMoodDetails = (mood: string) => {
   }
   return { image, music };
 };
+const getNextSixWeekends = (): { startDate: string; endDate: string }[] => {
+  const weekends: { id: string; startDate: string; endDate: string }[] = [];
+  const today = new Date();
+
+  const daysUntilSaturday = (6 - today.getDay() + 7) % 7;
+  const currentSaturday = new Date(today);
+  currentSaturday.setDate(today.getDate() + daysUntilSaturday);
+
+  for (let i = 0; i < 6; i++) {
+    const saturday = new Date(currentSaturday);
+    const sunday = new Date(currentSaturday);
+    sunday.setDate(saturday.getDate() + 1);
+
+    weekends.push({
+      id: uuid(),
+      startDate: saturday.toISOString(),
+      endDate: sunday.toISOString(),
+    });
+
+    currentSaturday.setDate(currentSaturday.getDate() + 7);
+  }
+
+  return weekends;
+};
+
+const formatWeekend = (startDate: string, endDate: string): string => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" };
+  const formattedStart = start.toLocaleDateString("en-GB", options);
+  const formattedEnd = end.toLocaleDateString("en-GB", options);
+  return `${formattedStart} - ${formattedEnd}`;
+};
+
+export { getWeekendDates, getIcon, getNextSixWeekends, formatWeekend };

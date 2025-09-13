@@ -1,16 +1,14 @@
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
-import DashboardHome from "./pages/dashboard/home";
-import GroupPlans from "./pages/dashboard/group-plans";
-import ManagePlans from "./pages/dashboard/manage-plans";
+import Home from "./pages/dashboard/index";
+import ActivityPage from "./pages/dashboard/ActivityPage";
+import Plans from "./pages/dashboard/Plans";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />}>
-        <Route index element={<DashboardHome />} />
-        <Route path="group-plans" element={<GroupPlans />} />
-        <Route path="manage-plans" element={<ManagePlans />} />
+      <Route path="/" element={<Home />}>
+        <Route index element={<ActivityPage />} />
+        <Route path="plans" element={<Plans />} />
       </Route>
     </Routes>
   );

@@ -42,7 +42,10 @@ const planSlice = createSlice({
      */
     addActivity: (
       state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; activityData: Omit<Activity, "id" | "createdAt" | "updatedAt"> }>
+      action: PayloadAction<{
+        day: "saturday" | "sunday";
+        activityData: Omit<Activity, "id" | "createdAt" | "updatedAt">;
+      }>
     ) => {
       const { day, activityData } = action.payload;
       let plan = state.plans.find((p) => p.day === day);
@@ -53,12 +56,12 @@ const planSlice = createSlice({
           id: uuid(),
           day: day,
           activities: [],
-          date: new Date().toISOString().split('T')[0],
+          date: new Date().toISOString().split("T")[0],
           updatedAt: now,
         };
         state.plans.push(plan);
       }
-      
+
       const newActivity: Activity = {
         id: uuid(),
         ...activityData,
@@ -81,7 +84,9 @@ const planSlice = createSlice({
       const plan = state.plans.find((p) => p.day === day);
 
       if (plan) {
-        plan.activities = plan.activities.filter((activity) => activity.id !== activityId);
+        plan.activities = plan.activities.filter(
+          (activity) => activity.id !== activityId
+        );
         plan.updatedAt = new Date().toISOString();
       }
     },
@@ -91,14 +96,20 @@ const planSlice = createSlice({
      */
     updateActivity: (
       state,
-      action: PayloadAction<{ day: "saturday" | "sunday"; activityId: string; updates: Partial<Omit<Activity, "id">> }>
+      action: PayloadAction<{
+        day: "saturday" | "sunday";
+        activityId: string;
+        updates: Partial<Omit<Activity, "id">>;
+      }>
     ) => {
       const { day, activityId, updates } = action.payload;
       const plan = state.plans.find((p) => p.day === day);
 
       if (plan) {
-        const activityToUpdate = plan.activities.find((activity) => activity.id === activityId);
-        
+        const activityToUpdate = plan.activities.find(
+          (activity) => activity.id === activityId
+        );
+
         if (activityToUpdate) {
           Object.assign(activityToUpdate, updates);
           activityToUpdate.updatedAt = new Date().toISOString();
@@ -106,8 +117,37 @@ const planSlice = createSlice({
         }
       }
     },
+    moveActivity: (
+      state,
+      action: PayloadAction<{
+        sourceDay: "saturday" | "sunday";
+        destinationDay: "saturday" | "sunday";
+        activityId: string;
+        targetIndex: number;
+      }>
+    ) => {
+      const { sourceDay, destinationDay, activityId, targetIndex } =
+        action.payload;
+      const sourcePlan = state.plans.find((p) => p.day === sourceDay);
+      const destinationPlan = state.plans.find((p) => p.day === destinationDay);
+
+      if (sourcePlan && destinationPlan) {
+        const activityIndex = sourcePlan.activities.findIndex(
+          (act) => act.id === activityId
+        );
+
+        if (activityIndex > -1) {
+          const [movedActivity] = sourcePlan.activities.splice(
+            activityIndex,
+            1
+          );
+          destinationPlan.activities.splice(targetIndex, 0, movedActivity);
+        }
+      }
+    },
   },
 });
 
-export const { addPlan, addActivity, removeActivity, updateActivity } = planSlice.actions;
+export const { addPlan, addActivity, removeActivity, updateActivity, moveActivity } =
+  planSlice.actions;
 export default planSlice.reducer;
