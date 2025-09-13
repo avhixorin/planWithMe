@@ -141,7 +141,7 @@ const Plans = () => {
             </ExportDialog>
           )}
           <Select onValueChange={setSelectedWeekend} value={selectedWeekend}>
-            <SelectTrigger className="text-foregroundn cursor-pointer">
+            <SelectTrigger className="text-foreground cursor-pointer">
               <SelectValue placeholder="Choose a weekend..." />
             </SelectTrigger>
             <SelectContent>
