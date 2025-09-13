@@ -13,7 +13,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      className="group/toggle extend-touch-target size-8 cursor-pointer"
+      className="group/toggle extend-touch-target size-8 cursor-pointer text-foreground"
       onClick={toggleTheme}
       title="Toggle theme"
     >

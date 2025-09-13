@@ -23,7 +23,6 @@ export function ActivityBrowser() {
     return categoryMatch && moodMatch;
   });
 
-
   return (
     <div className="space-y-6 h-full flex flex-col pt-4">
       <div className="space-y-4 flex flex-col">
@@ -36,7 +35,11 @@ export function ActivityBrowser() {
                 variant={selectedCategory === category ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category)}
-                className="capitalize transition-all duration-200 hover:scale-105"
+                className={`${
+                  selectedCategory === category
+                    ? "text-background"
+                    : "text-foreground"
+                } capitalize transition-all duration-200 hover:scale-105`}
               >
                 {category}
               </Button>
@@ -50,10 +53,12 @@ export function ActivityBrowser() {
             {moods.map((mood) => (
               <Button
                 key={mood}
-                variant={selectedMood === mood ? "secondary" : "outline"}
+                variant={selectedMood === mood ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedMood(mood)}
-                className="capitalize transition-all duration-200 hover:scale-105"
+                className={`${
+                  selectedMood === mood ? "text-background" : "text-foreground"
+                } capitalize transition-all duration-200 hover:scale-105`}
               >
                 {mood}
               </Button>
@@ -64,10 +69,7 @@ export function ActivityBrowser() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1 py-2">
         {filteredActivities.map((activity) => (
-          <ActivityCard
-            activity={activity}
-            key={activity.id}
-          />
+          <ActivityCard activity={activity} key={activity.id} />
         ))}
       </div>
 

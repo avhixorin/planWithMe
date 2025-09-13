@@ -88,9 +88,11 @@ const Plans = () => {
   return (
     <div className="w-full p-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
-        <h2 className="text-xl font-semibold">Your Weekend Plan</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          Your Weekend Plan
+        </h2>
         <Select onValueChange={setSelectedWeekend} value={selectedWeekend}>
-          <SelectTrigger>
+          <SelectTrigger className="text-foreground">
             <SelectValue placeholder="Choose a weekend..." />
           </SelectTrigger>
           <SelectContent>
@@ -98,7 +100,7 @@ const Plans = () => {
               <SelectItem
                 key={weekend.startDate}
                 value={weekend.startDate}
-                className="dark:focus:bg-slate-700"
+                className="dark:focus:bg-zinc-700"
               >
                 {formatWeekend(weekend.startDate, weekend.endDate)}
               </SelectItem>
