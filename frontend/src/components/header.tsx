@@ -1,6 +1,3 @@
-// First, install the icon library:
-// npm install lucide-react
-
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./theme-switcher";
 import { Badge } from "./ui/badge";

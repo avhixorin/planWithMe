@@ -11,10 +11,7 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 
 const getWeekendDates = (dateString: string) => {
-  // FIX: Create a new Date object from the incoming string
   const date = new Date(dateString);
-
-  // Ensure the date is valid before proceeding
   if (isNaN(date.getTime())) {
     console.error(
       "Invalid date string provided to getWeekendDates:",
