@@ -1,3 +1,5 @@
+import type { MOODS } from "./moodTypes";
+
 export interface Activity {
   id: string;
   name: string;
@@ -10,12 +12,13 @@ export interface Activity {
     | "creative";
   description: string;
   duration?: number;
-  mood: "relaxed" | "energetic" | "social" | "adventurous";
+  mood: MOODS;
   createdAt: string;
   updatedAt: string;
   icon: string;
   image?: string;
 }
+
 export interface ScheduledActivity extends Activity {
   day: "saturday" | "sunday";
   timeSlot: "morning" | "afternoon" | "evening";

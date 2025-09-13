@@ -1,12 +1,15 @@
 import type { PlansState } from "../src/redux/plansSlice";
+import type { MoodState } from "../src/redux/moodSlice";
 
 const STATE_KEY = "weekendPlanner";
 
-export const loadState = (): { weekendPlans: PlansState } | undefined => {
+export const loadState = ():
+  | { weekendPlans: PlansState; mood: MoodState }
+  | undefined => {
   try {
     const serializedState = localStorage.getItem(STATE_KEY);
     if (serializedState === null) {
-      return undefined; 
+      return undefined;
     }
     return JSON.parse(serializedState);
   } catch (err) {
@@ -15,8 +18,8 @@ export const loadState = (): { weekendPlans: PlansState } | undefined => {
   }
 };
 
-export const saveState = (state: { weekendPlans: PlansState }) => {
-  try { 
+export const saveState = (state: { weekendPlans: PlansState, mood: MoodState }) => {
+  try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem(STATE_KEY, serializedState);
   } catch (err) {

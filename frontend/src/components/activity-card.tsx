@@ -24,6 +24,7 @@ import { CATEGORY_ICONS, CATEGORY_THEMES } from "../constants/activity";
 import type { RootState } from "../redux/store";
 import { toast } from "sonner";
 import { formatWeekend, getNextSixWeekends } from "../../utils/general";
+import { type MOODSType, moods } from "../../types/moodTypes";
 
 interface ActivityCardProps {
   activity: Activity;
@@ -34,7 +35,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
   const plans = useSelector((state: RootState) => state.weekendPlans.plans);
   const weekends = useMemo(() => getNextSixWeekends(), []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [vibe, setVibe] = useState<MOODSType>(activity.mood);
   const [selectedWeekend, setSelectedWeekend] = useState("");
   const [selectedDay, setSelectedDay] = useState<"saturday" | "sunday" | "">(
     ""
@@ -60,6 +61,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
 
     const scheduledActivity: ScheduledActivity = {
       ...activity,
+      mood: vibe,
       day: selectedDay,
       timeSlot: selectedTimeSlot,
     };
@@ -147,7 +149,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
             <Button
               size="sm"
               onClick={handleOpenDialog}
-              className={`ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 cursor-pointer ${theme.bg} ${theme.text} border hover:border-gray-400`}
+              className={`ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 cursor-pointer ${theme.bg} ${theme.text} border transparent hover:bg-${theme.bg}`}
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -158,7 +160,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent
           className="
-      sm:max-w-[480px] 
+      sm:max-w-xl 
       bg-white/90 dark:bg-neutral-900/90 
       backdrop-blur-md text-foreground
       border border-gray-200 dark:border-neutral-700 
@@ -182,30 +184,58 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
           </DialogHeader>
 
           <div className="space-y-6 py-4">
-            <div className="space-y-2">
-              <label className="font-medium text-gray-800 dark:text-neutral-300">
-                Choose a Weekend
-              </label>
-              <Select
-                onValueChange={setSelectedWeekend}
-                value={selectedWeekend}
-              >
-                <SelectTrigger className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 mt-1">
-                  <CalendarDays className="h-4 w-4 mr-2 opacity-70" />
-                  <SelectValue placeholder="Select from upcoming weekends..." />
-                </SelectTrigger>
-                <SelectContent className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
-                  {weekends.map((weekend) => (
-                    <SelectItem
-                      key={weekend.startDate}
-                      value={weekend.startDate}
-                      className="dark:focus:bg-neutral-700"
-                    >
-                      {formatWeekend(weekend.startDate, weekend.endDate)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex justify-evely gap-6 flex-wrap">
+              <div className="space-y-2">
+                <label className="font-medium text-gray-800 dark:text-neutral-300">
+                  Choose a Weekend
+                </label>
+                <Select
+                  onValueChange={setSelectedWeekend}
+                  value={selectedWeekend}
+                >
+                  <SelectTrigger className="dark:bg-neutral-800 cursor-pointer dark:border-neutral-700 dark:text-neutral-200 mt-1">
+                    <CalendarDays className="h-4 w-4 mr-2 opacity-70" />
+                    <SelectValue placeholder="Select from upcoming weekends..." />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
+                    {weekends.map((weekend) => (
+                      <SelectItem
+                        key={weekend.startDate}
+                        value={weekend.startDate}
+                        className="dark:focus:bg-neutral-700 cursor-pointer"
+                      >
+                        {formatWeekend(weekend.startDate, weekend.endDate)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="font-medium text-gray-800 dark:text-neutral-300">
+                  Choose a Vibe
+                </label>
+                <Select
+                  onValueChange={(value) => setVibe(value as MOODSType)}
+                  value={vibe}
+                >
+                  <SelectTrigger className="dark:bg-neutral-800 cursor-pointer dark:border-neutral-700 dark:text-neutral-200 mt-1">
+                    <CalendarDays className="h-4 w-4 mr-2 opacity-70" />
+                    <SelectValue placeholder="Assign a vibe..." />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
+                    {moods.map((mood) => (
+                      <SelectItem
+                        key={mood}
+                        value={mood}
+                        className="dark:focus:bg-neutral-700 cursor-pointer"
+                      >
+                        {mood}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -216,12 +246,14 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
                 <Button
                   variant={selectedDay === "saturday" ? "default" : "outline"}
                   onClick={() => setSelectedDay("saturday")}
+                  className="cursor-pointer"
                 >
                   Saturday
                 </Button>
                 <Button
                   variant={selectedDay === "sunday" ? "default" : "outline"}
                   onClick={() => setSelectedDay("sunday")}
+                  className="cursor-pointer"
                 >
                   Sunday
                 </Button>
@@ -238,6 +270,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
                     selectedTimeSlot === "morning" ? "default" : "outline"
                   }
                   onClick={() => setSelectedTimeSlot("morning")}
+                  className="cursor-pointer"
                 >
                   Morning
                 </Button>
@@ -246,6 +279,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
                     selectedTimeSlot === "afternoon" ? "default" : "outline"
                   }
                   onClick={() => setSelectedTimeSlot("afternoon")}
+                  className="cursor-pointer"
                 >
                   Afternoon
                 </Button>
@@ -254,6 +288,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
                     selectedTimeSlot === "evening" ? "default" : "outline"
                   }
                   onClick={() => setSelectedTimeSlot("evening")}
+                  className="cursor-pointer"
                 >
                   Evening
                 </Button>
@@ -263,8 +298,8 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
 
           <DialogFooter>
             <Button
-              variant="ghost"
-              className="text-gray-600 dark:text-neutral-300"
+              variant="outline"
+              className="text-gray-600 dark:text-neutral-300 cursor-pointer"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
@@ -272,6 +307,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
             <Button
               onClick={handleConfirm}
               disabled={!selectedWeekend || !selectedDay || !selectedTimeSlot}
+              className="cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Confirm & Add
             </Button>

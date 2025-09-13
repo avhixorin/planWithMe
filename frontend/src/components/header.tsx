@@ -38,7 +38,7 @@ const Header = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="default"
-              className="text-sm"
+              className="text-sm cursor-pointer"
               onClick={() => navigate(currPath === "/plans" ? "/" : "/plans")}
             >
               {currPath === "/plans" ? (
@@ -59,7 +59,6 @@ const Header = () => {
               <ClipboardList className="h-4 w-4" />
               <span>{totalActivities}</span>
             </Badge>
-
             <ThemeToggle />
           </div>
         </div>

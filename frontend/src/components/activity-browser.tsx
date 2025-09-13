@@ -39,7 +39,7 @@ export function ActivityBrowser() {
                   selectedCategory === category
                     ? "text-background"
                     : "text-foreground"
-                } capitalize transition-all duration-200 hover:scale-105`}
+                } capitalize transition-all duration-200 hover:scale-105 cursor-pointer`}
               >
                 {category}
               </Button>
@@ -58,7 +58,7 @@ export function ActivityBrowser() {
                 onClick={() => setSelectedMood(mood)}
                 className={`${
                   selectedMood === mood ? "text-background" : "text-foreground"
-                } capitalize transition-all duration-200 hover:scale-105`}
+                } capitalize transition-all duration-200 hover:scale-105 cursor-pointer`}
               >
                 {mood}
               </Button>

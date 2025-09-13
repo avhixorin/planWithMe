@@ -141,7 +141,7 @@ const Plans = () => {
             </ExportDialog>
           )}
           <Select onValueChange={setSelectedWeekend} value={selectedWeekend}>
-            <SelectTrigger className="text-foreground">
+            <SelectTrigger className="text-foregroundn cursor-pointer">
               <SelectValue placeholder="Choose a weekend..." />
             </SelectTrigger>
             <SelectContent>
@@ -149,7 +149,7 @@ const Plans = () => {
                 <SelectItem
                   key={weekend.startDate}
                   value={weekend.startDate}
-                  className="dark:focus:bg-zinc-700"
+                  className="dark:focus:bg-zinc-700 cursor-pointer"
                 >
                   {formatWeekend(weekend.startDate, weekend.endDate)}
                 </SelectItem>
