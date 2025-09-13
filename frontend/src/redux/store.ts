@@ -1,9 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { throttle } from "lodash-es";
-import userReducer from "./slices/userSlice";
-import planReducer from "./slices/planSlice";
-import { componentSlice } from "./slices/componentSlice";
-import activityIdeasReducer from "./slices/activitiesSlice";
 import plansReducer from "./plansSlice";
 import { loadState, saveState } from "../../utils/localstorage";
 
@@ -11,11 +7,7 @@ const persistedState = loadState();
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
-    plan: planReducer,
     weekendPlans: plansReducer,
-    componentSlice: componentSlice.reducer,
-    activityIdeas: activityIdeasReducer,
   },
   preloadedState: persistedState,
 });
@@ -23,7 +15,7 @@ export const store = configureStore({
 store.subscribe(
   throttle(() => {
     saveState({
-      plan: store.getState().plan,
+      weekendPlans: store.getState().weekendPlans,
     });
   }, 1000)
 );

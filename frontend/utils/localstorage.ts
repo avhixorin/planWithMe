@@ -1,14 +1,8 @@
-import type { PlanState } from "../src/redux/slices/planSlice";
+import type { PlansState } from "../src/redux/plansSlice";
 
-// The key we'll use to store the state in localStorage
-const STATE_KEY = "weekendPlannerState";
+const STATE_KEY = "weekendPlanner";
 
-/**
- * Loads the plan state from localStorage.
- * Uses a try-catch block to handle cases where localStorage is unavailable
- * or the data is corrupted.
- */
-export const loadState = (): { plan: PlanState } | undefined => {
+export const loadState = (): { weekendPlans: PlansState } | undefined => {
   try {
     const serializedState = localStorage.getItem(STATE_KEY);
     if (serializedState === null) {
@@ -21,12 +15,8 @@ export const loadState = (): { plan: PlanState } | undefined => {
   }
 };
 
-/**
- * Saves the plan state to localStorage.
- * We only save the 'plan' slice to avoid storing other transient UI state.
- */
-export const saveState = (state: { plan: PlanState }) => {
-  try {
+export const saveState = (state: { weekendPlans: PlansState }) => {
+  try { 
     const serializedState = JSON.stringify(state);
     localStorage.setItem(STATE_KEY, serializedState);
   } catch (err) {

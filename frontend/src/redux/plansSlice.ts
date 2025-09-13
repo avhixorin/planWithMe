@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { Activity, Plan } from "../../types/planTypes";
 
-interface PlansState {
+export interface PlansState {
   plans: Plan[];
 }
 
