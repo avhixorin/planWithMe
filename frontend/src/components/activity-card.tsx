@@ -204,16 +204,15 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
           </DialogHeader>
 
           <div className="space-y-6 py-4">
-            {/* Weekend selection */}
             <div className="space-y-2">
               <label className="font-medium text-gray-800 dark:text-neutral-300">
-                1. Choose a Weekend
+                Choose a Weekend
               </label>
               <Select
                 onValueChange={setSelectedWeekend}
                 value={selectedWeekend}
               >
-                <SelectTrigger className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
+                <SelectTrigger className="dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200 mt-1">
                   <CalendarDays className="h-4 w-4 mr-2 opacity-70" />
                   <SelectValue placeholder="Select from upcoming weekends..." />
                 </SelectTrigger>
@@ -231,12 +230,11 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
               </Select>
             </div>
 
-            {/* Day selection */}
             <div className="space-y-2">
               <label className="font-medium text-gray-800 dark:text-neutral-300">
-                2. Pick a Day
+                Pick a Day
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 mt-1">
                 <Button
                   variant={selectedDay === "saturday" ? "default" : "outline"}
                   onClick={() => setSelectedDay("saturday")}
@@ -252,12 +250,11 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
               </div>
             </div>
 
-            {/* Time slot selection */}
             <div className="space-y-2">
               <label className="font-medium text-gray-800 dark:text-neutral-300">
-                3. Select a Time Slot
+                Select a Time Slot
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2 mt-1">
                 <Button
                   variant={
                     selectedTimeSlot === "morning" ? "default" : "outline"
