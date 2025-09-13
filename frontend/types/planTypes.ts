@@ -1,4 +1,4 @@
-import type { MOODS } from "./moodTypes";
+import type { MOODSType } from "./moodTypes";
 
 export interface Activity {
   id: string;
@@ -12,7 +12,7 @@ export interface Activity {
     | "creative";
   description: string;
   duration?: number;
-  mood: MOODS;
+  mood: MOODSType;
   createdAt: string;
   updatedAt: string;
   icon: string;
