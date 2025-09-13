@@ -30,7 +30,7 @@ const Header = () => {
             <img src="weekendly.png" className="h-7 w-7" alt="logo" />
             <div>
               <h1 className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-200">
-                Weekenly
+                Weekendly
               </h1>
             </div>
           </div>
