@@ -149,7 +149,7 @@ const ActivityCard = ({ activity }: ActivityCardProps) => {
             <Button
               size="sm"
               onClick={handleOpenDialog}
-              className={`ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 cursor-pointer ${theme.bg} ${theme.text} border transparent hover:bg-${theme.bg}`}
+              className={`ml-2 max-sm:opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 hover:scale-110 cursor-pointer ${theme.bg} ${theme.text} border transparent hover:bg-${theme.bg}`}
             >
               <Plus className="h-4 w-4" />
             </Button>
