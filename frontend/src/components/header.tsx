@@ -35,19 +35,30 @@ const Header = () => {
           <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="default"
-              className="text-sm cursor-pointer"
+              className="text-sm cursor-pointer max-sm:px-2 max-sm:py-1"
               onClick={() => navigate(currPath === "/plans" ? "/" : "/plans")}
             >
               {currPath === "/plans" ? (
-                <span className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" /> Add Activities
+                <span className="flex items-center gap-2 ">
+                  <Plus className="h-2 w-2 md:h-4 md:w-4 max-sm:text-xs" /> Add
+                  Activities
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <LayoutGrid className="h-4 w-4" /> My Plans
+                  <LayoutGrid className="h-2 w-2 md:h-4 md:w-4 max-sm:text-xs" />{" "}
+                  My Plans
                 </span>
               )}
             </Button>
+            {/* <Button
+              variant="default"
+              className="text-sm cursor-pointer"
+              onClick={() => navigate("/group-plans")}
+            >
+              <span className="flex items-center gap-2">
+                <Group className="h-4 w-4" /> Group Plans
+              </span>
+            </Button> */}
 
             <Badge
               variant="secondary"

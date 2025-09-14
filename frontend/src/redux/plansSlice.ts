@@ -65,6 +65,7 @@ const plansSlice = createSlice({
         }
       }
     },
+    clearPlans: () => initialState,
   },
 });
 
@@ -74,7 +75,8 @@ export const {
   updatePlan,
   addActivityToPlan,
   updateActivityInPlan,
-  removeActivityFromPlan
+  removeActivityFromPlan,
+  clearPlans,
 } = plansSlice.actions;
 
 export default plansSlice.reducer;

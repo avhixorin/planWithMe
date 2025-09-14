@@ -202,7 +202,7 @@ export function WeekendSchedule({
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex max-sm:flex-col-reverse max-sm:items-start items-center gap-2 mt-2">
                               <Select
                                 value={activity.day}
                                 onValueChange={(value: "saturday" | "sunday") =>
